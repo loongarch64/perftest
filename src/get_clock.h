@@ -105,6 +105,22 @@ static inline cycles_t get_cycles()
 	return cval;
 }
 
+#elif defined(__loongarch__)
+typedef unsigned long cycles_t;
+static inline cycles_t get_cycles()
+{
+        int rID = 0;
+        cycles_t cval;
+
+        __asm__ __volatile__(
+            "rdtime.d %0, %1 \n\t"
+            : "=r"(cval), "=r"(rID)
+            :
+            );
+
+        return cval;
+}
+
 #else
 #warning get_cycles not implemented for this architecture: attempt asm/timex.h
 #include <asm/timex.h>
